@@ -13,30 +13,9 @@ gem 'tilt', '~> 1.4.1' #temporary fix
 gem 'racksh'
 gem 'rack-flash3'
 gem 'json'
+gem 'rerun'
+gem 'bcrypt', '~> 3.1.12' #Temporary fix, required as bcrypt 3.1.10 results in a hashing error when trying to seed
+# Use SQLite
+gem 'dm-sqlite-adapter', group: :development
 
-# Used during local development (on your own machine)
-group :development do
 
-  # Use SQLite
-  gem 'dm-sqlite-adapter', group: :development
-  gem 'rerun'
-
-end
-
-# Used during production (on Heroku), when your application is 'live'
-group :production do
-
-  # Use Postgresql
-  
-  gem 'dm-postgres-adapter', group: :production
-
-end
-
-# Used when running tests (rake test:[acceptance|models|routes])
-group :test do
-
-  gem 'rspec' # Use rspec to write tests
-  gem 'capybara' # Use capybara to simulate a web browser (no javascript)
-  gem 'selenium-webdriver' # Use selenium to programmatically control a web browser (javascript capable)
-
-end
