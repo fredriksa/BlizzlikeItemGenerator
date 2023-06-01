@@ -10,9 +10,11 @@ Inspired by World of Warcraft's itemization formulas.
 ## Features
 
 - User access management and item generation restriction limits.
+- Output item information prepared as a SQL insert into statement.
 - Single equipment and weapon generation support for when there is a need to generate unique but balanced items.
 - Automatic equipment and weapon set generation. Easily create hundreds to thousands of balanced items to disperse into your game.
 - Support for tons of options that let you tweak how the generated items ends up. This includes for instance:
+    - Even stat distribution modifier (Choose how much of the item's total power should be evenly distributed)
     - Base power modifier (Item Level Modifier)
     - Item quality (Uncommon, Common, Rare, Epic and Legendary)
     - Item bonding (No binding, Bind on pickup, Bind on equip, Bind on use)
@@ -24,6 +26,12 @@ Inspired by World of Warcraft's itemization formulas.
 
 
 ## Previews
+
+![](./media/armor.gif)
+![](./media/weapons.gif)
+
 <img src="./media/login.png" width="700px">
 
-<img src="./media/item_generator_1.png" width="700px">s
+<img src="./media/item_generator_1.png" width="700px">
+
+<img src="./media/item_generator_2.png" width="700px">
