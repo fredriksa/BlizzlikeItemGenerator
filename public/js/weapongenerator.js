@@ -11,8 +11,3 @@ $('body').on('change', '#slot', function() {
     console.log(data);
   });
 });
-
-
-
-
-

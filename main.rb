@@ -95,3 +95,4 @@ puts "Merging SQL queries into merged_items.sql"
 Dir.chdir('sql') {
   system "copy *.sql merged_items.sql"
 }
+

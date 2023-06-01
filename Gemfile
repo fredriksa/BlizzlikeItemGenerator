@@ -18,4 +18,3 @@ gem 'bcrypt', '~> 3.1.12' #Temporary fix, required as bcrypt 3.1.10 results in a
 # Use SQLite
 gem 'dm-sqlite-adapter', group: :development
 
-
