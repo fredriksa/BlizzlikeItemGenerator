@@ -26,6 +26,4 @@ Inspired by World of Warcraft's itemization formulas.
 ## Previews
 <img src="./media/login.png" width="700px">
 
-<img src="./media/item_generator_1.png" width="700px">
-
-<img src="./media/item_generator_2.png" width="700px">
+<img src="./media/item_generator_1.png" width="700px">s
