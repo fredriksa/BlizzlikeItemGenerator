@@ -1,7 +1,7 @@
 
 # MMORPG Item Generator
 
-A MMORPG item generator for TrinityCore 3.3.5a written in Ruby (Sinatra) with
+A web-based MMORPG item generator for TrinityCore 3.3.5a written in Ruby (Sinatra) with
 SQLite and DataMapper as ORM. Depends on a multitude of Ruby gems and outputs
 the completed generation in SQL format.   
 
@@ -31,7 +31,3 @@ Inspired by World of Warcraft's itemization formulas.
 ![](./media/weapons.gif)
 
 <img src="./media/login.png" width="700px">
-
-<img src="./media/item_generator_1.png" width="700px">
-
-<img src="./media/item_generator_2.png" width="700px">
