@@ -48,8 +48,15 @@ class Seeder
       {name: "Spellpower", cost: 0.86, db_id: 45},
       {name: "Haste", cost: 1.7, db_id: 36},
       {name: "Hit", cost: 1.7, db_id: 31},
-      {name: "Crit", cost: 1.7, db_id: 32}
+      {name: "Crit", cost: 1.7, db_id: 32},
+      {name: "Armorpen", cost: 1.8, db_id: 44},
+      {name: "Expertise", cost: 1.8, db_id: 37},
+      {name: "Defense", cost: 1.8, db_id: 12},
+      {name: "Dodge", cost: 1.8, db_id: 13},
+      {name: "Parry", cost: 1.8, db_id: 14}
     ]
+
+    # Armor pen/expertise was deduced by checking relative to the amount of crit.
 
     stats.each {|stat| Stat.create(stat)}
   end

@@ -1,6 +1,6 @@
 class ItemGenerator
   #generates item from selected params
-  def self.generate(params, user_id, entry_modifier = nil)
+  def self.generate(params, user_id = nil, entry_modifier = nil)
     entry_modifier = 0 if not entry_modifier
 
     items = []
@@ -10,7 +10,14 @@ class ItemGenerator
       entry_modifier += 1
     end
 
-    filename = "./sql/merged_items_#{user_id}_#{items.first.slot_id}.sql"
+    filename = "./sql/merged_items_"
+
+    unless user_id.nil?
+      filename += "#{user_id}_"
+    end
+
+    filename += "#{items.first.slot_id}.sql"
+    
     self.save_sql(items, filename, params)
     return filename
   end

@@ -49,6 +49,8 @@ class Displayselector
     level_range = self.base_level_range(level)
 
     candidates = get_candidates(level_range, class_id, subclass_id, inventorytype)
+
+    puts("Level range: #{level_range} class_id: #{class_id} subclass_id: #{subclass_id} inventorytype: #{inventorytype}")
     return candidates.sample.displayid
   end
 
