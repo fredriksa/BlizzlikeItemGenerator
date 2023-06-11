@@ -9,12 +9,30 @@ class StatsGenerator
     stat_rates = stat_rates(stats)
     total_points = itemization_points(slotbudget, stat_rates[:leftover])
     points = split_points(total_points, stat_rates)
+    points = apply_level_modifier(item, points)
 
-    # Converts back from imteization_points to actual stat points
+    # Converts back from itemization_points to actual stat points
     stat_points = stat_points(points)
 
     stats = generate_stats(stat_points)
     delete_empty_stats(stats)
+  end
+
+  def self.apply_level_modifier(item, points)
+    # Apply modifier depending on where in the world the level target is.
+    # Classic items are weaker (<= 60), TBC are stronger (61-70), WOTLK is what the generator is implemented for. 
+    pointModifier = 1
+    if item.level <= 60
+      pointModifier = 0.5 
+    elsif item.level > 60 and item.level <= 70
+      pointModifier = 0.75
+    elsif item.level > 70 and item.level >= 80
+      pointModifier = 1
+    end
+
+    points.each do |key, value|
+      points[key] = value * pointModifier
+    end
   end
 
   def self.set_unavailable_rate(new_rate)

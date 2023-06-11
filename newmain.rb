@@ -210,7 +210,7 @@ ITEM_SETS.each do |key, inner_map|
         end
     end
 
-    ItemSetGenerator.generate(params_dup)
+    #ItemSetGenerator.generate(params_dup)
     WeaponSetGenerator.generate(params_dup)
 end
 

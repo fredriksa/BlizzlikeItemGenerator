@@ -42,9 +42,27 @@ class WeaponGenerator
     weapon.min_damage = DamageGenerator.generate_min(weapon)
     weapon.max_damage = DamageGenerator.generate_max(weapon)
 
+    apply_level_modifier(weapon)
+
     weapon.stats = StatsGenerator.generate(weapon, StatsFormatter.format_array(params))
     weapon.name = NameGenerator.generate(weapon, params['suffix'] == 'true', true)
     return weapon
+  end
+
+  def self.apply_level_modifier(weapon)
+      # Apply modifier depending on where in the world the level target is.
+      # Classic items are weaker (<= 60), TBC are stronger (61-70), WOTLK is what the generator is implemented for. 
+      pointModifier = 1
+      if weapon.level <= 60
+        pointModifier = 0.85 
+      elsif weapon.level > 60 and item.level <= 70
+        pointModifier = 0.95
+      elsif weapon.level > 70 and item.level >= 80
+        pointModifier = 1
+      end
+      
+      weapon.min_damage *= pointModifier
+      weapon.max_damage *= pointModifier
   end
 
   def self.save_sql(weapons, filename, params)
