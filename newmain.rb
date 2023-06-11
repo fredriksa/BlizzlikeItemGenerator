@@ -40,65 +40,121 @@ require_relative "./models/slot.rb"
 require_relative "./models/stat.rb"
 require_relative "./models/subclass.rb"
 
+require 'fileutils'
+
 class ItemSetGenerator
-    def self.generate(params)
-      files = []
-      
-      slots = ["Head", ["Neck", "Neck"], "Shoulder", ["Back", "Cloth"], "Chest", "Waist", "Legs", "Feet", "Wrist", "Hands",
-              ["Finger", "Finger"], ["Trinket", "Trinket"]]
+  def self.generate(params)
+    files = []
+    
+    slots = ["Head", ["Neck", "Neck"], "Shoulder", ["Back", "Cloth"], "Chest", "Waist", "Legs", "Feet", "Wrist", "Hands",
+            ["Finger", "Finger"], ["Trinket", "Trinket"]]
 
-      #slots = ["Head"]
-      #slots = ["Head", ["Neck", "Neck"], "Shoulder", ["Back", "Cloth"], "Chest", "Waist", "Legs", "Feet", "Wrist", "Hands",
-      #        ["Finger", "Finger"], ["Trinket", "Trinket"]] #Slots that will be generated
-      #We have to manually enter the subclass for neck, back, finger and trinket
-      #params['token_loot_distance_start'] = 0
+    params_dup = params.dup
 
-      params_dup = params.dup
-  
-      slots.each do |slot|
-        # We need to handle wearables that are not of type Cloth, Leather etc..
-        if slot.is_a? Array 
-            params_dup['slot'] = slot[0]
-            params_dup['subclass'] = slot[1]
-        else
-            params_dup['slot'] = slot
-            params_dup['subclass'] = params['subclass']
-            puts("Slot: #{slot} subclass: #{params['subclass']}")
-        end
-  
-        files << ItemGenerator.generate(params_dup, nil)
-      end
-  
-      filename = "./sql/merged_itemset.sql"
-  
-      files.each do |file|
-        merge_sql(file, filename)
-      end
-  
-      return filename
-    end
-  
-    def self.merge_sql(file, target_file)
-      file = File.open(file, 'r')
-  
-      if File.exists? target_file
-        target_file = File.open(target_file, 'a')
+    slots.each do |slot|
+      # Handle wearables that are not of type Cloth, Leather etc..
+      if slot.is_a? Array 
+          params_dup['slot'] = slot[0]
+          params_dup['subclass'] = slot[1]
       else
-        target_file = File.open(target_file, 'w')
+          params_dup['slot'] = slot
+          params_dup['subclass'] = params['subclass']
+          puts("Slot: #{slot} subclass: #{params['subclass']}")
       end
-      
-      file_lines = file.readlines
-  
-      file_lines.each do |line|
-        target_file.puts line
-      end
-  
-      file.close
-      target_file.close
+
+      files << ItemGenerator.generate(params_dup, nil)
     end
+
+    filename = "./sql/merged_itemset.sql"
+
+    files.each do |file|
+      merge_sql(file, filename)
+    end
+
+    return filename
   end
 
+  def self.merge_sql(file, target_file)
+    file = File.open(file, 'r')
+
+    if File.exists? target_file
+      target_file = File.open(target_file, 'a')
+    else
+      target_file = File.open(target_file, 'w')
+    end
+    
+    file_lines = file.readlines
+
+    file_lines.each do |line|
+      target_file.puts line
+    end
+
+    file.close
+    target_file.close
+  end
+end
+
+class WeaponSetGenerator
+  def self.generate(params)
+    files = []
+    temp_params = params.dup
+
+    slots = [ #Slots with subclasses that will be generated
+      ["One-Hand", ["Axe", "Mace", "Sword", "Fist Weapon", "Dagger"]],
+      ["Two-Hand", ["Axe", "Mace", "Sword", "Polearm", "Staff"]],
+      ["Bow", ["Bow"]],
+      ["Gun", ["Gun"]],
+      ["Wand", ["Wand"]]
+    ]
+
+    slots.each do |slot|
+      temp_params['slot'] = slot.first 
+
+      slot[1].each do |subclass| 
+        temp_params['subclass'] = subclass
+        files << WeaponGenerator.generate(temp_params, nil)
+      end
+    end
+
+    filename = "./sql/merged_weaponset.sql"
+
+    files.each do |file|
+      merge_sql(file, filename)
+    end
+
+    return filename
+  end
+
+  def self.merge_sql(file, target_file)
+    file = File.open(file, 'r')
+
+    if File.exists? target_file
+      target_file = File.open(target_file, 'a')
+    else
+      target_file = File.open(target_file, 'w')
+    end
+    
+    file_lines = file.readlines
+
+    file_lines.each do |line|
+      target_file.puts line
+    end
+
+    file.close
+    target_file.close
+  end
+end
+
 require_relative "./src/itemsets.rb"
+
+folder_path = './sql'
+absolute_folder_path = File.expand_path(folder_path)
+
+# Delete all files ending with .sql
+Dir.glob(File.join(absolute_folder_path, '*.sql')).each do |file_path|
+  print("Deleting: #{file_path}" )
+  File.delete(file_path)
+end
 
 puts(ITEM_SETS)
 
@@ -155,18 +211,8 @@ ITEM_SETS.each do |key, inner_map|
     end
 
     ItemSetGenerator.generate(params_dup)
+    WeaponSetGenerator.generate(params_dup)
 end
 
-# params["subclass"] = "Cloth" # Cloth/LeatherMail/Plate
-
-# params["stat1"] = "Agility" # Stat nr 1. Up to stat9 inclusive exists.
-# params["stat2"] = "Stamina"
-# params["rstat1"] = "Healing" # Random stat nr 1. Up to rstat 9 inclusive exists.
-# params["rstat2"] = "Crit" 
-
-# params["minrstats"] = 1
-# params["maxrstats"] = 2
-
-#ItemSetGenerator.generate(params)
 
 exit!

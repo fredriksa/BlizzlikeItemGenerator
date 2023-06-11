@@ -1,26 +1,30 @@
 class WeaponGenerator
   #generates weapon from selected params
-  def self.generate(params, user_id, entry_modifier = nil)
-    entry_modifier = 0 if not entry_modifier
-
+  def self.generate(params, user_id = nil)
     weapons = []
     weapons_to_create = params['amount'].to_i
     weapons_to_create.times do
-      weapons << generate_weapon(params, entry_modifier)
-      entry_modifier += 1
+      weapons << generate_weapon(params)
+      GenerationData.instance.entry_modifier += 1
     end
     
-    filename = "./sql/merged_weapons_#{user_id}_#{weapons.first.slot_id}_#{weapons.first.subclass_id}.sql"
+    filename = "./sql/merged_weapons_"
+    
+    unless user_id.nil?
+      filename += "#{user_id}_"
+    end
+
+    filename += "#{weapons.first.slot_id}_#{weapons.first.subclass_id}.sql"
     self.save_sql(weapons, filename, params)
     return filename
   end
 
   private
-  def self.generate_weapon(params, entry_modifier)
+  def self.generate_weapon(params)
     StatsGenerator.set_unavailable_rate params['unavailable'].to_f
 
     weapon = Weapon.new
-    weapon.entry = params['id'].to_i + entry_modifier
+    weapon.entry = GenerationData.instance.start_entry + GenerationData.instance.entry_modifier
     weapon.level = params['level'].to_i
     weapon.class = :weapon
     weapon.subclass = params['subclass'].to_sym
