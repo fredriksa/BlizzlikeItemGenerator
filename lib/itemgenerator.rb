@@ -1,13 +1,12 @@
 class ItemGenerator
   #generates item from selected params
-  def self.generate(params, user_id = nil, entry_modifier = nil)
-    entry_modifier = 0 if not entry_modifier
+  def self.generate(params, user_id = nil)
 
     items = []
     items_to_create = params['amount'].to_i
     items_to_create.times do
-      items << generate_item(params, entry_modifier)
-      entry_modifier += 1
+      items << generate_item(params)
+      GenerationData.instance.entry_modifier += 1
     end
 
     filename = "./sql/merged_items_"
@@ -23,11 +22,11 @@ class ItemGenerator
   end
 
   private
-  def self.generate_item(params, entry_modifier)
+  def self.generate_item(params)
     StatsGenerator.set_unavailable_rate params['unavailable'].to_f
 
     item = Item.new
-    item.entry = params['id'].to_i + entry_modifier
+    item.entry = GenerationData.instance.start_entry + GenerationData.instance.entry_modifier
     item.level = params['level'].to_i
     item.bonding = 1
     item.class = :armor

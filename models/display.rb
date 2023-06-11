@@ -7,4 +7,5 @@ class Display
   property :inventorytype, Integer
   property :requiredlevel, Integer
   property :displayid, Integer
+  property :quality, Integer
 end

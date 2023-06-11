@@ -19,6 +19,8 @@ require_relative "./lib/statsformatter.rb"
 require_relative "./lib/statsgenerator.rb"
 require_relative "./lib/string.rb"
 
+require_relative "./src/generationdata.rb"
+
 # Use bundler to load gems
 require 'bundler'
 
@@ -41,34 +43,30 @@ require_relative "./models/subclass.rb"
 class ItemSetGenerator
     def self.generate(params)
       files = []
-        
-      slots = ["Head"]
+      
+      slots = ["Head", ["Neck", "Neck"], "Shoulder", ["Back", "Cloth"], "Chest", "Waist", "Legs", "Feet", "Wrist", "Hands",
+              ["Finger", "Finger"], ["Trinket", "Trinket"]]
+
+      #slots = ["Head"]
       #slots = ["Head", ["Neck", "Neck"], "Shoulder", ["Back", "Cloth"], "Chest", "Waist", "Legs", "Feet", "Wrist", "Hands",
       #        ["Finger", "Finger"], ["Trinket", "Trinket"]] #Slots that will be generated
       #We have to manually enter the subclass for neck, back, finger and trinket
-      entry_modifier = 0
-      params['token_loot_distance_start'] = 0
+      #params['token_loot_distance_start'] = 0
+
+      params_dup = params.dup
   
       slots.each do |slot|
         # We need to handle wearables that are not of type Cloth, Leather etc..
         if slot.is_a? Array 
-            params['slot'] = slot[0]
-            params['subclass'] = slot[1]
+            params_dup['slot'] = slot[0]
+            params_dup['subclass'] = slot[1]
         else
-            params['slot'] = slot
-            params['subclass'] = params['subclass']
+            params_dup['slot'] = slot
+            params_dup['subclass'] = params['subclass']
+            puts("Slot: #{slot} subclass: #{params['subclass']}")
         end
   
-        files << ItemGenerator.generate(params, nil, entry_modifier)
-        entry_modifier += params['amount'].to_i
-  
-        # If we have generated items for one slot we have to make room for possible crate item
-        entry_modifier += 1
-  
-        # We have to keep track on what the next token ID should be
-        params['next_item_token_id'] = params['id'].to_i + entry_modifier + params['amount'].to_i
-        # We have to keep track on how far away from 'start position' we are 
-        params['token_loot_distance_start'] += params['amount'].to_i + 1
+        files << ItemGenerator.generate(params_dup, nil)
       end
   
       filename = "./sql/merged_itemset.sql"
@@ -107,7 +105,7 @@ puts(ITEM_SETS)
 params = {}
 
 # Default Params
-params["id"] = 90000 # Starting-ID for this batch's generated items.
+GenerationData.instance.start_entry = 90000;
 params["amount"] = 1 # Number of variations
 params["crate"] = "no" # no/yes - Item crate yes or no?
 params["unavailable"] = 0.5 # Unavailable percentage

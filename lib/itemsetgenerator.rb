@@ -3,8 +3,8 @@ class Itemsetgenerator
     files = []
     temp_params = params.dup
 
-    slots = ["Head", ["Neck", "Neck"], "Shoulder", ["Back", "Cloth"], "Chest", "Waist", "Legs", "Feet", "Wrist", "Hands",
-            ["Finger", "Finger"], ["Trinket", "Trinket"]] #Slots that will be generated
+    slots = ["Head"]#, ["Neck", "Neck"]]#, ["Back", "Cloth"], "Chest"], "Waist", "Legs", "Feet", "Wrist", "Hands",
+            #["Finger", "Finger"], ["Trinket", "Trinket"]] #Slots that will be generated
     #We have to manually enter the subclass for neck, back, finger and trinket
     entry_modifier = 0
     temp_params['token_loot_distance_start'] = 0

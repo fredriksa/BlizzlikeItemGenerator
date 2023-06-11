@@ -8,11 +8,15 @@ class Displayselector
       class_id = nil
       subclass_id = nil
 
+      quality_id = Quality.first(name: params['quality']).db_id
+
       if armor 
         subclass = Subclass.first(name: params['subclass'])
         subclass_id = subclass.db_id
         inventorytype = Slot.first(name: params['slot']).db_id
         class_id = 4
+
+        print("Subclass #{params["subclass"]} inventoryType: #{params["slot"]}")
       else #if weapon
         slot = Slot.first(name: params['slot'])
         
@@ -36,25 +40,25 @@ class Displayselector
       end
 
       if (params['display'] == "0" || params['display'] == nil) && params['displaylevel'] != 0
-        return self.get_display(class_id, subclass_id, inventorytype, params['displaylevel'].to_i)
+        return self.get_display(class_id, subclass_id, inventorytype, params['displaylevel'].to_i, quality_id)
       else
-        return self.get_display(class_id, subclass_id, inventorytype, params['level'].to_i)
+        return self.get_display(class_id, subclass_id, inventorytype, params['level'].to_i, quality_id)
       end
     end
 
     return params['display'].to_i
   end
 
-  def self.get_display(class_id, subclass_id, inventorytype, level)
+  def self.get_display(class_id, subclass_id, inventorytype, level, quality_id)
     level_range = self.base_level_range(level)
 
-    candidates = get_candidates(level_range, class_id, subclass_id, inventorytype)
+    candidates = get_candidates(level_range, class_id, subclass_id, inventorytype, quality_id)
 
     puts("Level range: #{level_range} class_id: #{class_id} subclass_id: #{subclass_id} inventorytype: #{inventorytype}")
     return candidates.sample.displayid
   end
 
-  def self.get_candidates(level_range, class_id, subclass_id, inventorytype)
+  def self.get_candidates(level_range, class_id, subclass_id, inventorytype, quality_id)
     level_range = level_range.dup
     min_range = level_range.min
     max_range = level_range.max
@@ -65,7 +69,8 @@ class Displayselector
         break
       end
 
-      candidates = Display.all(class_id: class_id, subclass_id: subclass_id, requiredlevel: level_range, inventorytype: inventorytype)
+      #quality.lte to allow items with generated quality "Epic" still look as Uncommon/Rare.
+      candidates = Display.all(class_id: class_id, subclass_id: subclass_id, requiredlevel: level_range, inventorytype: inventorytype, :quality.lte => quality_id)
       min_range -= 1
       max_range += 1
       level_range = min_range..max_range
