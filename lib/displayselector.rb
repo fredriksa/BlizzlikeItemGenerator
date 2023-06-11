@@ -15,8 +15,6 @@ class Displayselector
         subclass_id = subclass.db_id
         inventorytype = Slot.first(name: params['slot']).db_id
         class_id = 4
-
-        print("Subclass #{params["subclass"]} inventoryType: #{params["slot"]}")
       else #if weapon
         slot = Slot.first(name: params['slot'])
         
@@ -54,7 +52,6 @@ class Displayselector
 
     candidates = get_candidates(level_range, class_id, subclass_id, inventorytype, quality_id)
 
-    puts("Level range: #{level_range} class_id: #{class_id} subclass_id: #{subclass_id} inventorytype: #{inventorytype}")
     return candidates.sample.displayid
   end
 

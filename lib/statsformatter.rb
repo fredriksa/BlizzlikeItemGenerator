@@ -3,7 +3,6 @@ class StatsFormatter
     stats_base = base_stats(params)
     stats_random = random_stats(params)
     stats = combine_stats(stats_base, stats_random)
-    p stats 
     stats
   end
 

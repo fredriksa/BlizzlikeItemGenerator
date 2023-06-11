@@ -10,7 +10,7 @@ configure :development do
   puts "*******************"
 
   # Enable logging to console
-  DataMapper::Logger.new($stdout, :debug)
+  #DataMapper::Logger.new($stdout, :debug)
 
   # Use SQLite
   DataMapper.setup(:default, "sqlite:///#{Dir.pwd}/db/app-dev.sqlite")

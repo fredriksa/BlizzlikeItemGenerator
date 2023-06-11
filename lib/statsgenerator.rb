@@ -22,10 +22,16 @@ class StatsGenerator
     # Apply modifier depending on where in the world the level target is.
     # Classic items are weaker (<= 60), TBC are stronger (61-70), WOTLK is what the generator is implemented for. 
     pointModifier = 1
-    if item.level <= 60
-      pointModifier = 0.5 
+    if item.level <= 10
+      pointModifier = 0.2
+    elsif item.level <= 20
+      pointModifier = 0.2
+    elsif item.level <= 40
+      pointModifier = 0.3
+    elsif item.level <= 50
+      pointModifier = 0.4
     elsif item.level > 60 and item.level <= 70
-      pointModifier = 0.75
+      pointModifier = 0.6
     elsif item.level > 70 and item.level >= 80
       pointModifier = 1
     end

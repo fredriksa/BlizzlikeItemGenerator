@@ -55,9 +55,9 @@ class WeaponGenerator
       pointModifier = 1
       if weapon.level <= 60
         pointModifier = 0.85 
-      elsif weapon.level > 60 and item.level <= 70
+      elsif weapon.level > 60 and weapon.level <= 70
         pointModifier = 0.95
-      elsif weapon.level > 70 and item.level >= 80
+      elsif weapon.level > 70 and weapon.level >= 80
         pointModifier = 1
       end
       
