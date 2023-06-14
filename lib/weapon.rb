@@ -4,6 +4,9 @@ class Weapon
                 :display_id, :sellprice, :buyprice, :bonding, :durability,
                 :dps, :attackspeed, :min_damage, :max_damage, :bonding
 
+  # Accessors for re-generation
+  attr_accessor :distribution_map
+
   # Generates a SQL insert query
   def generate_query
 

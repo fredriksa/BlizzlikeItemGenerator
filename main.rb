@@ -39,6 +39,7 @@ require_relative "./models/rank.rb"
 require_relative "./models/slot.rb"
 require_relative "./models/stat.rb"
 require_relative "./models/subclass.rb"
+require_relative "./models/itemgenerationdata.rb"
 
 require 'fileutils'
 
@@ -74,8 +75,9 @@ class ItemSetGenerator
           params_dup['slot'] = slot
           params_dup['subclass'] = params['subclass']
 
-          if params_dup['level'] <= 40 
-            if params_dup['subclass'] == 'plate' then
+          # Skip plate for items level < 40
+          if params_dup['level'] < 40 
+            if params_dup['subclass'] == 'Plate' then
               next
             end
           end 
@@ -122,7 +124,6 @@ class WeaponSetGenerator
       ["One-Hand", ["Axe", "Mace", "Sword", "Fist Weapon", "Dagger"]],
       ["Two-Hand", ["Axe", "Mace", "Sword", "Polearm", "Staff"]],
       ["Main-Hand", ["Axe", "Mace", "Sword", "Fist Weapon", "Dagger"]],
-      ["Off-Hand", ["Axe", "Mace", "Sword", "Fist Weapon", "Dagger"]],
       ["Bow", ["Bow"]],
       ["Gun", ["Gun"]],
       ["Wand", ["Wand"]]
@@ -171,9 +172,8 @@ require_relative "./src/itemsets.rb"
 folder_path = './sql'
 absolute_folder_path = File.expand_path(folder_path)
 
-# Delete all files ending with .sql
+# Delete all files ending with .sql in ./sql/
 Dir.glob(File.join(absolute_folder_path, '*.sql')).each do |file_path|
-  print("Deleting: #{file_path}" )
   File.delete(file_path)
 end
 

@@ -8,7 +8,16 @@ class StatsGenerator
 
     stat_rates = stat_rates(stats)
     total_points = itemization_points(slotbudget, stat_rates[:leftover])
-    points = split_points(total_points, stat_rates)
+
+    if not GenerationData.instance.regeneration then 
+      points = split_points(total_points, stat_rates)
+      generate_distribution_map(item, points)
+    else
+      split_points_regen(item, points)
+      puts "Unhandled statsgenerator #15"
+      exit!      
+    end
+
     points = apply_level_modifier(item, points)
 
     # Converts back from itemization_points to actual stat points
@@ -16,6 +25,19 @@ class StatsGenerator
 
     stats = generate_stats(stat_points)
     delete_empty_stats(stats)
+  end
+
+  def self.generate_distribution_map(item, points)
+    item.distribution_map = {}
+
+    totalPoints = 0
+    points.keys.each do |key|
+      totalPoints += points[key]
+    end
+
+    points.keys.each do |key|
+      item.distribution_map[key] = points[key].to_f / totalPoints
+    end
   end
 
   def self.apply_level_modifier(item, points)
@@ -27,13 +49,17 @@ class StatsGenerator
     elsif item.level <= 20
       pointModifier = 0.2
     elsif item.level <= 40
-      pointModifier = 0.3
+      pointModifier = 0.25
     elsif item.level <= 50
-      pointModifier = 0.4
-    elsif item.level > 60 and item.level <= 70
-      pointModifier = 0.6
-    elsif item.level > 70 and item.level >= 80
-      pointModifier = 1
+      pointModifier = 0.3
+    elsif item.level > 60 and item.level <= 65
+      pointModifier = 0.65
+    elsif item.level > 65 and item.level <= 70
+      pointModifier = 0.75
+    elsif item.level > 70 and item.level <= 75
+      pointModifier = 0.85
+    elsif item.level > 75 and item.level <= 80
+      pointModifier = 0.95
     end
 
     points.each do |key, value|
@@ -119,6 +145,10 @@ class StatsGenerator
     end
 
     return point_split
+  end
+
+  def self.split_points_regen(item, points)
+
   end
 
   # Converts itemization points to stat points (one stat point = one of that spot)
